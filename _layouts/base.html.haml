@@ -9,6 +9,9 @@
         padding-top: 60px;
       }
     %link{ :rel=>'stylesheet', :type=>'text/css', :href=>"#{site.base_url}/stylesheets/styles.css" }
+    %link{ :rel=>'stylesheet', :type=>'text/css', :href=>"#{site.base_url}/stylesheets/code.css" }
+    %script{ :type=>'text/javascript', :src=>"#{site.base_url}/javascripts/highlight.pack.js" }
+    %script{ :type=>'text/javascript'}hljs.initHighlightingOnLoad();
     /[if lt IE 9]
       %script{ :type=>'text/javascript', :src=>'//html5shim.googlecode.com/svn/trunk/html5.js' }
   %body
