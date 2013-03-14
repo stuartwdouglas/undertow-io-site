@@ -31,7 +31,8 @@ required for that task.
 
 An example handler chain could be as follows:
 
-![An Example Handler Chain](https://raw.github.com/stuartwdouglas/tmp/master/images/example.png "An Example Handler Chain")
+image::#{site.base_url}/images/example.png["An Example Handler Chain",title="An Example Handler Chain"]
+
 
 Servlet functionality will be built on top of the async server core. The
 servlet module will integrate with the core by providing its own handlers for
@@ -73,16 +74,17 @@ Handlers
 
 The basic handler interface is as follows:
 
-	public interface HttpHandler {
-
-	    /**
-	     * Handle the request.
-	     *
-	     * @param exchange the HTTP request/response exchange
-	     * @param completionHandler the completion handler
-	     */
-	    void handleRequest(HttpServerExchange exchange, HttpCompletionHandler completionHandler);
-	}
+[source,java]
+----
+public interface HttpHandler {
+  /**
+   * Handle the request.
+   *
+   * @param exchange the HTTP request/response exchange
+   */
+   void handleRequest(HttpServerExchange exchange) throws Exception;
+}
+----
 
 The HttpServerExchange holds all current state to do with this request and the
 response, including headers, response code, channels, etc. It can have
@@ -218,25 +220,28 @@ Configuration and Bootstrap
 The basic configuration will be done via a fluent builder API, an example of
 what this might look like is shown below:
 
-	final PathHandler root = new PathHandler();
-        final ServletContainer container = new ServletContainer(root);
 
-        ServletInfo.ServletInfoBuilder s = ServletInfo.builder()
-                .setName("servlet")
-                .setServletClass(SimpleServlet.class)
-                .addMapping("/aa");
+[source,java]
+----
+final PathHandler root = new PathHandler();
+final ServletContainer container = new ServletContainer(root);
 
-        DeploymentInfo.DeploymentInfoBuilder builder = DeploymentInfo.builder()
-                .setClassLoader(SimpleServletServerTestCase.class.getClassLoader())
-                .setContextName("/servletContext")
-                .setDeploymentName("servletContext.war")
-                .setResourceLoader(TestResourceLoader.INSTANCE)
-                .addServlet(s);
+ServletInfo.ServletInfoBuilder s = ServletInfo.builder()
+        .setName("servlet")
+        .setServletClass(SimpleServlet.class)
+        .addMapping("/aa");
 
-        DeploymentManager manager = container.addDeployment(builder);
-        manager.deploy();
-        manager.start();
+DeploymentInfo.DeploymentInfoBuilder builder = DeploymentInfo.builder()
+        .setClassLoader(SimpleServletServerTestCase.class.getClassLoader())
+        .setContextName("/servletContext")
+        .setDeploymentName("servletContext.war")
+        .setResourceLoader(TestResourceLoader.INSTANCE)
+        .addServlet(s);
 
+DeploymentManager manager = container.addDeployment(builder);
+manager.deploy();
+manager.start();
+----
 
 A deep copy of these builders may be further modified during the deploy()
 phase by ServletContainerInitializers (It is necessary to clone the builders
@@ -309,25 +314,31 @@ the `SecurityContext` is established, then the `AuthenticationMechanism`s and co
 performed in any order and finally the `AuthenticationCallHandler` but be called before any processing of
 a potentially protected resource.
 
-![An Example Security Chain](https://raw.github.com/darranl/undertow-docs/security/images/security_handlers.png "An Example Security Chain")
+image::#{site.base_url}/images/security_handlers.png["An Example Security Chain",title="An Example Security Chain"]
 
 Security mechanisms that are to be used must implement the following interface: -
 
-        public interface AuthenticationMechanism {
-            IoFuture<AuthenticationResult> authenticate(final HttpServerExchange exchange);
-            void handleComplete(final HttpServerExchange exchange, final HttpCompletionHandler completionHandler);
-        }
+[source,java]
+----
+public interface AuthenticationMechanism {
+    IoFuture<AuthenticationResult> authenticate(final HttpServerExchange exchange);
+    void handleComplete(final HttpServerExchange exchange, final HttpCompletionHandler completionHandler);
+}
+----
 
 The `AuthenticationResult` is used by the mechanism to indicate the status of the attempted authentication and
 is also used as the mechanism to return the Principal of the authenticated identity if authentication we
 achieved.
 
-        public class AuthenticationResult {
-            private final Principal principle;
-            private final AuthenticationOutcome outcome;
+[source,java]
+----
+public class AuthenticationResult {
+    private final Principal principle;
+    private final AuthenticationOutcome outcome;
 
-            public AuthenticationResult(final Principal principle, final AuthenticationOutcome outcome) { ... }
-        }
+    public AuthenticationResult(final Principal principle, final AuthenticationOutcome outcome) { ... }
+}
+----
 
 The authentication process is split into two phases, the `INBOUND` phase and the `OUTBOUND` phase, the
 `INBOUND` phase is only responsible for checking if authentication data has been received from the client
@@ -384,7 +395,11 @@ back to the client.
 A mechanism can make the following call within the `handleComplete` method to check if it should be sending back a general
 challenge or if it being called for an optional update: -
 
-        if (Util.shouldChallenge(exchange)) { ... }
+[source,java]
+----
 
+if (Util.shouldChallenge(exchange)) { ... }
+
+----
 
 

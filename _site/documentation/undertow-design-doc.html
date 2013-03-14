@@ -23,9 +23,6 @@
           <a class='brand' href='http://localhost:4242'>Undertow</a>
           <ul class='nav'>
             <li>
-              <a href='http://localhost:4242'>Home</a>
-            </li>
-            <li>
               <a href='https://github.com/undertow-io/undertow'>Source</a>
             </li>
             <li>
@@ -70,9 +67,13 @@
           
         <p>An example handler chain could be as follows:</p>
       </div>
-      <div class="paragraph">
+      <div class="imageblock">
+        <div class="content">
           
-        <p>![An Example Handler Chain](<a href="https://raw.github.com/stuartwdouglas/tmp/master/images/example.png">https://raw.github.com/stuartwdouglas/tmp/master/images/example.png</a> "An Example Handler Chain")</p>
+          <img src="http://localhost:4242/images/example.png" alt="An Example Handler Chain">
+          
+        </div>
+        <div class="title">Figure 1. An Example Handler Chain</div>
       </div>
       <div class="paragraph">
           
@@ -142,16 +143,12 @@
           
         <p>The basic handler interface is as follows:</p>
       </div>
-      <div class="literalblock">
+      <div class="listingblock">
         
         <div class="content monospaced">
-          <pre>public interface HttpHandler {</pre>
-        </div>
-      </div>
-      <div class="literalblock">
-        
-        <div class="content monospaced">
-          <pre>    /**&#x000A;     * Handle the request.&#x000A;     *&#x000A;     * @param exchange the HTTP request/response exchange&#x000A;     * @param completionHandler the completion handler&#x000A;     */&#x000A;    void handleRequest(HttpServerExchange exchange, HttpCompletionHandler completionHandler);&#x000A;}</pre>
+          
+          <pre class="highlight"><code class="java">public interface HttpHandler {&#x000A;  /**&#x000A;   * Handle the request.&#x000A;   *&#x000A;   * @param exchange the HTTP request/response exchange&#x000A;   */&#x000A;   void handleRequest(HttpServerExchange exchange) throws Exception;&#x000A;}</code></pre>
+          
         </div>
       </div>
       <div class="paragraph">
@@ -418,28 +415,12 @@
         <p>The basic configuration will be done via a fluent builder API, an example of
       what this might look like is shown below:</p>
       </div>
-      <div class="literalblock">
+      <div class="listingblock">
         
         <div class="content monospaced">
-          <pre>final PathHandler root = new PathHandler();&#x000A;       final ServletContainer container = new ServletContainer(root);</pre>
-        </div>
-      </div>
-      <div class="literalblock">
-        
-        <div class="content monospaced">
-          <pre>ServletInfo.ServletInfoBuilder s = ServletInfo.builder()&#x000A;        .setName("servlet")&#x000A;        .setServletClass(SimpleServlet.class)&#x000A;        .addMapping("/aa");</pre>
-        </div>
-      </div>
-      <div class="literalblock">
-        
-        <div class="content monospaced">
-          <pre>DeploymentInfo.DeploymentInfoBuilder builder = DeploymentInfo.builder()&#x000A;        .setClassLoader(SimpleServletServerTestCase.class.getClassLoader())&#x000A;        .setContextName("/servletContext")&#x000A;        .setDeploymentName("servletContext.war")&#x000A;        .setResourceLoader(TestResourceLoader.INSTANCE)&#x000A;        .addServlet(s);</pre>
-        </div>
-      </div>
-      <div class="literalblock">
-        
-        <div class="content monospaced">
-          <pre>DeploymentManager manager = container.addDeployment(builder);&#x000A;manager.deploy();&#x000A;manager.start();</pre>
+          
+          <pre class="highlight"><code class="java">final PathHandler root = new PathHandler();&#x000A;final ServletContainer container = new ServletContainer(root);&#x000A;&#x000A;ServletInfo.ServletInfoBuilder s = ServletInfo.builder()&#x000A;        .setName("servlet")&#x000A;        .setServletClass(SimpleServlet.class)&#x000A;        .addMapping("/aa");&#x000A;&#x000A;DeploymentInfo.DeploymentInfoBuilder builder = DeploymentInfo.builder()&#x000A;        .setClassLoader(SimpleServletServerTestCase.class.getClassLoader())&#x000A;        .setContextName("/servletContext")&#x000A;        .setDeploymentName("servletContext.war")&#x000A;        .setResourceLoader(TestResourceLoader.INSTANCE)&#x000A;        .addServlet(s);&#x000A;&#x000A;DeploymentManager manager = container.addDeployment(builder);&#x000A;manager.deploy();&#x000A;manager.start();</code></pre>
+          
         </div>
       </div>
       <div class="paragraph">
@@ -572,18 +553,24 @@
       performed in any order and finally the `AuthenticationCallHandler</tt> but be called before any processing of
       a potentially protected resource.</p>
       </div>
-      <div class="paragraph">
+      <div class="imageblock">
+        <div class="content">
           
-        <p>![An Example Security Chain](<a href="https://raw.github.com/darranl/undertow-docs/security/images/security_handlers.png">https://raw.github.com/darranl/undertow-docs/security/images/security_handlers.png</a> "An Example Security Chain")</p>
+          <img src="http://localhost:4242/images/security_handlers.png" alt="An Example Security Chain">
+          
+        </div>
+        <div class="title">Figure 2. An Example Security Chain</div>
       </div>
       <div class="paragraph">
           
         <p>Security mechanisms that are to be used must implement the following interface: -</p>
       </div>
-      <div class="literalblock">
+      <div class="listingblock">
         
         <div class="content monospaced">
-          <pre>public interface AuthenticationMechanism {&#x000A;    IoFuture&lt;AuthenticationResult&gt; authenticate(final HttpServerExchange exchange);&#x000A;    void handleComplete(final HttpServerExchange exchange, final HttpCompletionHandler completionHandler);&#x000A;}</pre>
+          
+          <pre class="highlight"><code class="java">public interface AuthenticationMechanism {&#x000A;    IoFuture&lt;AuthenticationResult&gt; authenticate(final HttpServerExchange exchange);&#x000A;    void handleComplete(final HttpServerExchange exchange, final HttpCompletionHandler completionHandler);&#x000A;}</code></pre>
+          
         </div>
       </div>
       <div class="paragraph">
@@ -592,16 +579,12 @@
       is also used as the mechanism to return the Principal of the authenticated identity if authentication we
       achieved.</p>
       </div>
-      <div class="literalblock">
+      <div class="listingblock">
         
         <div class="content monospaced">
-          <pre>public class AuthenticationResult {&#x000A;    private final Principal principle;&#x000A;    private final AuthenticationOutcome outcome;</pre>
-        </div>
-      </div>
-      <div class="literalblock">
-        
-        <div class="content monospaced">
-          <pre>    public AuthenticationResult(final Principal principle, final AuthenticationOutcome outcome) { ... }&#x000A;}</pre>
+          
+          <pre class="highlight"><code class="java">public class AuthenticationResult {&#x000A;    private final Principal principle;&#x000A;    private final AuthenticationOutcome outcome;&#x000A;&#x000A;    public AuthenticationResult(final Principal principle, final AuthenticationOutcome outcome) { ... }&#x000A;}</code></pre>
+          
         </div>
       </div>
       <div class="paragraph">
@@ -700,10 +683,12 @@
         <p>A mechanism can make the following call within the <tt>handleComplete</tt> method to check if it should be sending back a general
       challenge or if it being called for an optional update: -</p>
       </div>
-      <div class="literalblock">
+      <div class="listingblock">
         
         <div class="content monospaced">
-          <pre>if (Util.shouldChallenge(exchange)) { ... }</pre>
+          
+          <pre class="highlight"><code class="java">&#x000A;if (Util.shouldChallenge(exchange)) { ... }&#x000A;</code></pre>
+          
         </div>
       </div>
       
